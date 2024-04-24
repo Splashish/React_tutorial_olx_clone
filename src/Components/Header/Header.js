@@ -1,12 +1,16 @@
-import React from 'react';
-
+import React,{useContext} from 'react';
+import {useHistory} from 'react-router-dom'
 import './Header.css';
 import OlxLogo from '../../assets/OlxLogo';
 import Search from '../../assets/Search';
 import Arrow from '../../assets/Arrow';
 import SellButton from '../../assets/SellButton';
 import SellButtonPlus from '../../assets/SellButtonPlus';
+import { AuthContext, FirebaseContext } from '../../store/FirebaseContext';
 function Header() {
+  const history=useHistory()
+  const {user}=useContext(AuthContext)
+  const {firebase} = useContext(FirebaseContext)
   return (
     <div className="headerParentDiv">
       <div className="headerChildDiv">
@@ -33,18 +37,57 @@ function Header() {
           <span> ENGLISH </span>
           <Arrow></Arrow>
         </div>
+
         <div className="loginPage">
-          <span>Login</span>
+          <span>{user?`Welcome ${user.displayName}`:''}</span>
           <hr />
+
+          
+         
         </div>
 
-        <div className="sellMenu">
-          <SellButton></SellButton>
-          <div className="sellMenuContent">
-            <SellButtonPlus></SellButtonPlus>
-            <span>SELL</span>
+
+        {user ? ( // If user exists
+        <div>
+         
+          <div className="sellMenu">
+            <SellButton />
+            <div className="sellMenuContent">
+              <SellButtonPlus />
+              <span onClick={() => {
+                history.push('/create');
+              }}>SELL</span>
+            </div>
           </div>
         </div>
+      ) : ( // If user does not exist
+      
+
+      
+        <div>
+          
+          <span onClick={() => history.push('/signup')}>Sign Up   /</span>
+          
+          <span onClick={() => history.push('/login')}>    Login</span>
+
+          
+        </div>
+      )}
+
+       <div>
+      
+        {user&&<span onClick={()=>{
+          firebase.auth().signOut();
+          history.push('/login')
+        }}>Logout</span>}
+</div>
+
+<div>
+
+</div>
+
+
+
       </div>
     </div>
   );
