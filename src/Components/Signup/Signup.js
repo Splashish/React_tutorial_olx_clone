@@ -20,7 +20,7 @@ export default function Signup() {
         id:result.user.uid,
         username:username,
         phone:phone
-      }).then(()=>{
+      }).then(()=>{   
         history.push("/login")
 
       })
